@@ -22,7 +22,7 @@ parser.add_argument("--model_name", type=str, required=True,
 parser.add_argument("--model_path", type=str, required=True, help="Sepcify the directory of model")
 parser.add_argument("--question_file", type=str, default="question-default.xlsx", 
                     help="Specify the csv or xlsx file which contains questions")
-parser.add_argument("--load_8bit", action="store_true", help="Load 8 bit quantized model in default")
+parser.add_argument("--load_8bit", type=bool, default=False, help="Load 8 bit quantized model, default value False")
 args = parser.parse_args()
 
 # Load Model

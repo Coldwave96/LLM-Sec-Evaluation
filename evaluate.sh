@@ -5,4 +5,4 @@ python evaluate.py \
 python evaluate.py \
     --model_name Baichuan \
     --model_path /home/max/Documents/Baichuan-13B/Baichuan-13B-Chat \
-    --load_8bit
+    --load_8bit True
