@@ -1,11 +1,13 @@
 # LLM Security Evalustion
 This repo contains scripts for evaluating LLM security abilities. We gathered hundreds of questions cover different ascepts of security, such as vulnerablities, pentest, threat intelligence, etc.
 
-# Suppoted LLM
+All the questions can be viewed at [https://huggingface.co/datasets/c01dsnap/LLM-Sec-Evaluation](https://huggingface.co/datasets/c01dsnap/LLM-Sec-Evaluation).
+
+## Suppoted LLM
 * ChatGLM
 * Baichuan
 
-# Usage
+## Usage
 Because of different LLM requires for different running environment, we highly recommended to manage your virtual envs via Miniconda.
 
 1.Install dependencies
