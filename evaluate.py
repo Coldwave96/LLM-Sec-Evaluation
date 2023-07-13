@@ -75,7 +75,7 @@ for i_question, row_question in question_df.iterrows():
         {
             'question': row_question["question"],
             f'{args.model_name}': response,
-            'time_spend': time_start - time_end
+            'time_spend': time_end - time_start
         },
         index = [output_df.size]
     )
