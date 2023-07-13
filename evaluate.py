@@ -32,7 +32,8 @@ match args.model_name:
         tokenizer = AutoTokenizer.from_pretrained(args.model_path, trust_remote_code=True)
         model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True)
         if args.load_8bit:
-            model = model.quantize(8).cuda()
+            model = model.quantize(8)
+        model = model.cuda()
         model.eval()
     case "Baichuan":
         tokenizer = AutoTokenizer.from_pretrained(args.model_path, use_fast=False, trust_remote_code=True)
