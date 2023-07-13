@@ -2,6 +2,7 @@
 
 import os
 import sys
+import time
 import torch
 import argparse
 import pandas as pd
@@ -61,6 +62,7 @@ print("[*] Start evaluating...")
 output_df = pd.DataFrame()
 for i_question, row_question in question_df.iterrows():
     prompt = f"""{row_question}"""
+    time_start = time.time()
     match args.model_name:
         case "ChatGLM":
             response, history = model.chat(tokenizer, prompt, history=[])
@@ -68,10 +70,12 @@ for i_question, row_question in question_df.iterrows():
             messages = []
             messages.append({"role": "user", "content": prompt})
             response = model.chat(tokenizer, messages)
+    time_end = time.time()
     temp = pd.DataFrame(
         {
             'question': row_question["question"],
-            f'{args.model_name}': response
+            f'{args.model_name}': response,
+            'time_spend': time_start - time_end
         },
         index = [output_df.size]
     )
