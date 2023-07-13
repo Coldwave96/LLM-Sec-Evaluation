@@ -37,9 +37,11 @@ match args.model_name:
         model.eval()
     case "Baichuan":
         tokenizer = AutoTokenizer.from_pretrained(args.model_path, use_fast=False, trust_remote_code=True)
-        model = AutoModelForCausalLM.from_pretrained(args.model_path, torch_dtype=torch.float16, trust_remote_code=True)
         if args.load_8bit:
+            model = AutoModelForCausalLM.from_pretrained(args.model_path, torch_dtype=torch.float16, trust_remote_code=True)
             model = model.quantize(8).cuda()
+        else:
+            model = model = AutoModelForCausalLM.from_pretrained(args.model_path, torch_dtype=torch.float16, device_map="auto", trust_remote_code=True)
         model.generation_config = GenerationConfig.from_pretrained(args.model_path)
     case _:
         print(f"{args.model_name} is not supported yet! Please choose from {str(supported_models)}")
