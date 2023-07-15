@@ -64,7 +64,7 @@ else:
 print("[*] Start evaluating...")
 output_df = pd.DataFrame()
 for i_question, row_question in question_df.iterrows():
-    prompt = f"""{row_question}"""
+    prompt = f"""{row_question["question"]}"""
     time_start = time.time()
     match args.model_name:
         case "ChatGLM":
