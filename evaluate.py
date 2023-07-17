@@ -3,6 +3,7 @@
 import os
 import sys
 import time
+import json
 import torch
 import argparse
 import pandas as pd
@@ -13,6 +14,7 @@ from transformers import (
     AutoModelForCausalLM
 )
 from transformers.generation.utils import GenerationConfig
+from llama_cpp import Llama
 
 supported_models = ["ChatGLM", "Baichuan"]
 
@@ -43,6 +45,8 @@ match args.model_name:
         else:
             model = AutoModelForCausalLM.from_pretrained(args.model_path, torch_dtype=torch.float16, device_map="auto", trust_remote_code=True)
         model.generation_config = GenerationConfig.from_pretrained(args.model_path)
+    case "Vicuna":
+        llm = Llama(model_path=args.model_path, n_ctx=2048, n_gpu_layers=256)
     case _:
         print(f"{args.model_name} is not supported yet! Please choose from {str(supported_models)}")
         sys.exit(0)
@@ -73,6 +77,10 @@ for i_question, row_question in question_df.iterrows():
             messages = []
             messages.append({"role": "user", "content": prompt})
             response = model.chat(tokenizer, messages)
+        case "Vicuna":
+            messages = "Q: " + prompt + " A: "
+            output = llm(messages, max_tokens=1024, stop=["Q:"], echo=True)
+            response = output["choices"][0]["text"].split("A: ")[1].strip()
     time_end = time.time()
     temp = pd.DataFrame(
         {
