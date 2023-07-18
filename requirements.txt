@@ -6,7 +6,6 @@ torch>=2.0
 mdtex2html
 sentencepiece
 accelerate
-sse-starlette
 openpyxl
 pandas
 transformers_stream_generator
