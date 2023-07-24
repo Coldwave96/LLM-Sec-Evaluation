@@ -7,6 +7,7 @@ All the questions can be viewed at [https://huggingface.co/datasets/c01dsnap/LLM
 * ChatGLM
 * Baichuan
 * Vicuna ([GGML format](https://huggingface.co/TheBloke/vicuna-13b-v1.3.0-GGML))
+* LLaMA (HuggingFace format)
 
 ## Usage
 Because of different LLM requires for different running environment, we highly recommended to manage your virtual envs via Miniconda.
@@ -32,3 +33,4 @@ bash evaluate.sh
 ## Changelog
 - 2023.7.13 - Add support for ChatGLM & Baichuan
 - 2023.7.17 - Add support for Vicuna
+- 2023.7.24 - Add support for LLaMA

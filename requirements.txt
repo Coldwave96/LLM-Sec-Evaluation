@@ -10,3 +10,4 @@ openpyxl
 pandas
 transformers_stream_generator
 llama-cpp-python
+vllm

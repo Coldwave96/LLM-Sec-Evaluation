@@ -3,7 +3,6 @@
 import os
 import sys
 import time
-import json
 import torch
 import argparse
 import pandas as pd
@@ -15,8 +14,9 @@ from transformers import (
 )
 from transformers.generation.utils import GenerationConfig
 from llama_cpp import Llama
+from vllm import LLM, SamplingParams
 
-supported_models = ["ChatGLM", "Baichuan"]
+supported_models = ["ChatGLM", "Baichuan", "Vicuna", "LLaMA"]
 
 parser = argparse.ArgumentParser(description="Scripts for testing LLM sec abilities.")
 parser.add_argument("--model_name", type=str, required=True, 
@@ -46,7 +46,9 @@ match args.model_name:
             model = AutoModelForCausalLM.from_pretrained(args.model_path, torch_dtype=torch.float16, device_map="auto", trust_remote_code=True)
         model.generation_config = GenerationConfig.from_pretrained(args.model_path)
     case "Vicuna":
-        llm = Llama(model_path=args.model_path, n_ctx=2048, n_gpu_layers=256)
+        model = Llama(model_path=args.model_path, n_ctx=2048, n_gpu_layers=256)
+    case "LLaMA":
+        model = LLM(args.model_path, tensor_parallel_size=1)
     case _:
         print(f"{args.model_name} is not supported yet! Please choose from {str(supported_models)}")
         sys.exit(0)
@@ -79,8 +81,12 @@ for i_question, row_question in question_df.iterrows():
             response = model.chat(tokenizer, messages)
         case "Vicuna":
             messages = "Q: " + prompt + " A: "
-            output = llm(messages, max_tokens=1024, stop=["Q:"], echo=True)
+            output = model(messages, max_tokens=1024, stop=["Q:"], echo=True)
             response = output["choices"][0]["text"].split("A: ")[1].strip()
+        case "LLaMA":
+            sampling_params = SamplingParams(top_p=0.95, temperature=0.8, top_k=40, max_tokens=256)
+            outputs = model.generate(prompt, sampling_params=sampling_params)
+            response = outputs[0].outputs[0].text
     time_end = time.time()
     temp = pd.DataFrame(
         {
@@ -95,6 +101,6 @@ for i_question, row_question in question_df.iterrows():
     if i_question % 10 == 0:
         print(f"Total amount: {question_df.shape[0]}, finished No.{i_question} already...")
 
-output_file = "output-" + args.model_name + ".xlsx"
+output_file = "outputs/output-" + args.model_name + ".xlsx"
 output_df.to_excel(output_file)
 print(f"[*] Successfully finished evalustion process, please check {output_file} for detailed results.")

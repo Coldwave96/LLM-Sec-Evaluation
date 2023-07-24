@@ -10,3 +10,7 @@ python evaluate.py \
 python evaluate.py \
     --model_name Vicuna \
     --model_path /home/max/Documents/vicuna-13B-GGML/vicuna-13b-v1.3.0.ggmlv3.q8_0.bin
+
+python evaluate.py \
+    --model_name LLaMA \
+    --model_path /home/max/Documents/llama-2/llama-2-7b-chat-hf
