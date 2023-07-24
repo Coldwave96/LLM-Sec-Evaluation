@@ -84,9 +84,11 @@ for i_question, row_question in question_df.iterrows():
             output = model(messages, max_tokens=1024, stop=["Q:"], echo=True)
             response = output["choices"][0]["text"].split("A: ")[1].strip()
         case "LLaMA":
-            sampling_params = SamplingParams(top_p=0.95, temperature=0.8, top_k=40, max_tokens=256)
+            sampling_params = SamplingParams(top_p=0.95, temperature=0.8, top_k=40, max_tokens=1024)
             outputs = model.generate(prompt, sampling_params=sampling_params)
-            response = outputs[0].outputs[0].text
+            response = outputs[0].outputs[0].text.strip()
+            if response.startswith("?"):
+                response = response[1:].strip()
     time_end = time.time()
     temp = pd.DataFrame(
         {
